@@ -5,7 +5,7 @@ import oracle.jvm.hotspot.jfr.Producer;
 
 public interface IDataExtractor {
 
-    public Producer registerProducer(IKafkaProducer kafkaProducer);
-    public IDataSource registerDataSource(IDataSource dataSource);
+    public void registerProducer(IKafkaProducer kafkaProducer);
+    public void registerDataSource(IDataSource dataSource);
     public void produce();
 }

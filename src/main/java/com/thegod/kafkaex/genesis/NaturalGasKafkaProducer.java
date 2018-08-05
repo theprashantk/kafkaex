@@ -1,6 +1,7 @@
 package com.thegod.kafkaex.genesis;
 
 import com.thegod.kafkaex.basic.IKafkaConstants;
+import com.thegod.kafkaex.exception.DataSourceNotFoundException;
 import com.thegod.kafkaex.genesis.serdes.NaturalGasValueSerializer;
 import com.thegod.kafkaex.gov.model.resources.NaturalGasModel;
 import com.thegod.kafkaex.util.Commons;
@@ -12,7 +13,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 
 import java.util.Properties;
 
-public class NaturalGasKafkaProducer implements IKafkaProducer<Long, NaturalGasModel>{
+public class NaturalGasKafkaProducer<Long, NaturalGasModel> implements IKafkaProducer{
 
     Properties producerProperties;
 
@@ -23,7 +24,7 @@ public class NaturalGasKafkaProducer implements IKafkaProducer<Long, NaturalGasM
 
 
     @Override
-    public Properties config() {
+    public Properties config() throws DataSourceNotFoundException {
 
         Properties properties = Commons.readProperty(Boolean.TRUE, Commons.KAFKA_PRODUCER_PROPERTY);
         producerProperties = new Properties();
@@ -31,6 +32,8 @@ public class NaturalGasKafkaProducer implements IKafkaProducer<Long, NaturalGasM
         producerProperties.put(ProducerConfig.CLIENT_ID_CONFIG, properties.getProperty(Commons.KAFKA_CLIENT_ID_PROPERTY_NAME));
         producerProperties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, LongSerializer.class.getName());
         producerProperties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, NaturalGasValueSerializer.class.getName());
-        return properties;
+        producerProperties.put(Commons.KAFKA_NATURAL_GAS_TOPIC_PROPERTY_NAME, properties.getProperty(Commons.KAFKA_NATURAL_GAS_TOPIC_PROPERTY_NAME));
+
+        return producerProperties;
     }
 }
